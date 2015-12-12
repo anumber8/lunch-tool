@@ -1,22 +1,25 @@
 package de.oc.lunch.user;
 
+import java.util.UUID;
+
 import javax.faces.bean.ManagedBean;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-
 @Entity
 @ManagedBean
 public class User {
-	
-	private Long id;
+	@Id
+	private Long id = UUID.randomUUID().getLeastSignificantBits();
+
 	private String name;
+	
 	private String email;
-	
+
 	public User() {
-		
+
 	}
-	
+
 	public User(String Name, String Email) {
 		this.name = Name;
 		this.email = Email;
@@ -26,19 +29,23 @@ public class User {
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String Name) {
 		this.name = Name;
 	}
-	
+
 	public String getEmail() {
 		return email;
 	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
