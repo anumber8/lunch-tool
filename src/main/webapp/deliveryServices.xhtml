@@ -9,14 +9,14 @@
 
 	<ui:define name="content">
 		<h:dataTable styleClass="table table-striped"
-			value="#{lieferdiensteManager.dienste}" var="lieferdienst">
+			value="#{deliveryServiceBean.deliveryServices}" var="service">
 			<h:column>
 				<f:facet name="header"> Name</f:facet>
-               #{lieferdienst.name}
+               #{service.name}
             </h:column>
 			<h:column>
-				<f:facet name="header">Menu</f:facet>
-                 #{lieferdienst.website}
+				<f:facet name="header">Website</f:facet>
+                 #{service.website}
             </h:column>
 		</h:dataTable>
 	</ui:define>

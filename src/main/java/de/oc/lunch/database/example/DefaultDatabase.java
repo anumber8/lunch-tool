@@ -1,29 +1,31 @@
 package de.oc.lunch.database.example;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import de.oc.lunch.user.User;
+import de.oc.lunch.persistence.DeliveryServiceEntity;
+import de.oc.lunch.persistence.UserEntity;
 
 @WebListener
 public class DefaultDatabase implements ServletContextListener {
+	public static EntityManagerFactory emf;
 
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
-		try (Connection conn = DriverManager.getConnection("jdbc:hsqldb:robina", "sa", "")) {
+		emf.close();
+		try (Connection conn = DriverManager.getConnection("jdbc:hsqldb:lunch", "robina", "kuh")) {
 			Statement st = conn.createStatement();
 			st.execute("SHUTDOWN");
 			
@@ -34,7 +36,10 @@ public class DefaultDatabase implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
+		emf = Persistence.createEntityManagerFactory("lunch");
 		populateUserTable();
+		readUserTable();
+		populateDeliveryServiceTable();
 	}
 
 	public synchronized void update(Connection conn, String expression) throws SQLException {
@@ -48,12 +53,12 @@ public class DefaultDatabase implements ServletContextListener {
 	}
 
 	public void populateUserTable() {
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("robina");
 		EntityManager em = emf.createEntityManager();
 		EntityTransaction transaction = em.getTransaction();
 		try {
 			transaction.begin();
-			createUser(em, "Robina Ku", "robina.kuh@example.com");
+			createUser(em, "Robina Kuh", "robina.kuh@example.com");
+			createUser(em, "Wayne Interessierts", "wayne.interessierts@example.com");
 			createUser(em, "John Doe", "john.doe@example.com");
 			createUser(em, "Jane Dull", "jane.dull@example.com");
 			transaction.commit();
@@ -61,11 +66,28 @@ public class DefaultDatabase implements ServletContextListener {
 			transaction.rollback();
 		}
 		em.close();
-		emf.close();
+	}
+	
+	public void populateDeliveryServiceTable() {
+		DeliveryServiceEntity service = new DeliveryServiceEntity("Lieferheld", "www.lieferheld.de");
+		service.persist();
+		List<DeliveryServiceEntity> services = DeliveryServiceEntity.findAll();
+		System.out.println(services.size());
+	}
+
+	
+	public void readUserTable() {
+		EntityManager em = emf.createEntityManager();
+		TypedQuery<UserEntity> query = em.createQuery("from UserEntity", UserEntity.class);
+		List<UserEntity> resultList = query.getResultList();
+		resultList.stream().forEach(user -> System.out.println(user.getId() + " " + user.getName() + " " + user.getEmail()));
+		System.out.println("---");
+		UserEntity.findAll().stream().forEach(user -> System.out.println(user.getId() + " " + user.getName() + " " + user.getEmail()));
+		System.out.println("---");
 	}
 
 	private void createUser(EntityManager em, String name, String email) {
-		User jane = new User();
+		UserEntity jane = new UserEntity();
 		jane.setName(name);
 		jane.setEmail(email);
 		em.persist(jane);
