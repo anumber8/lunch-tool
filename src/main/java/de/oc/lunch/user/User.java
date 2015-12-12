@@ -1,4 +1,4 @@
-package de.oc.bestellApp.user;
+package de.oc.lunch.user;
 
 import javax.faces.bean.ManagedBean;
 import javax.persistence.Entity;

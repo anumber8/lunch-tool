@@ -1,4 +1,4 @@
-package de.oc.bestellApp.lieferdienste;
+package de.oc.lunch.lieferdienste;
 
 import javax.faces.bean.ManagedBean;
 

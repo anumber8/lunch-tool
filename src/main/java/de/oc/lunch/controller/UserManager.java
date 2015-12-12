@@ -1,4 +1,4 @@
-package de.oc.bestellApp.controller;
+package de.oc.lunch.controller;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import javax.faces.bean.ManagedBean;
 
 import org.apache.log4j.Logger;
 
-import de.oc.bestellApp.database.dao.UserDAOImpl;
-import de.oc.bestellApp.user.User;
+import de.oc.lunch.database.dao.UserDAOImpl;
+import de.oc.lunch.user.User;
 
 @ManagedBean
 public class UserManager {

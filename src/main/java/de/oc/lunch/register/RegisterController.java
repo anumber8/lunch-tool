@@ -1,10 +1,11 @@
-package de.oc.bestellApp.register;
-
-import de.oc.bestellApp.controller.UserManager;
-import de.oc.bestellApp.user.User;
-import org.apache.log4j.Logger;
+package de.oc.lunch.register;
 
 import javax.faces.bean.SessionScoped;
+
+import org.apache.log4j.Logger;
+
+import de.oc.lunch.controller.UserManager;
+import de.oc.lunch.user.User;
 
 /**
  * Created by stefanbilleb on 14.11.15.

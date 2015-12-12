@@ -1,8 +1,8 @@
-package de.oc.bestellApp.database.dao;
+package de.oc.lunch.database.dao;
 
 import java.util.ArrayList;
 
-import de.oc.bestellApp.user.User;
+import de.oc.lunch.user.User;
 
 public interface IUserDAO {
 

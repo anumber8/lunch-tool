@@ -1,4 +1,4 @@
-package de.oc.bestellApp.database.dao;
+package de.oc.lunch.database.dao;
 
 import java.util.ArrayList;
 
@@ -10,7 +10,7 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
-import de.oc.bestellApp.user.User;
+import de.oc.lunch.user.User;
 
 public class UserDAOImpl implements IUserDAO {
 
