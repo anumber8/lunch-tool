@@ -4,23 +4,20 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:b="http://bootsfaces.net/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:f="http://java.sun.com/jsf/core"
 	template="pageTemplate.xhtml">
 
 	<ui:define name="content">
 		<h:dataTable styleClass="table table-striped"
-			value="#{userManager.users}" var="user">
+			value="#{lieferdiensteManager.dienste}" var="lieferdienst">
 			<h:column>
 				<f:facet name="header"> Name</f:facet>
-   #{user.name}
-</h:column>
-
-
+               #{lieferdienst.name}
+            </h:column>
 			<h:column>
-				<f:facet name="header"> Email</f:facet>
-     #{user.email}
-</h:column>
+				<f:facet name="header">Menu</f:facet>
+                 #{lieferdienst.website}
+            </h:column>
 		</h:dataTable>
-
 	</ui:define>
 </ui:composition>

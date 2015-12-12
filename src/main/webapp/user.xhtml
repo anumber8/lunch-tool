@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:b="http://bootsfaces.net/ui"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:f="http://java.sun.com/jsf/core" template="pageTemplate.xhtml">
+
+  <ui:define name="content">
+    <h:dataTable styleClass="table table-striped"
+      value="#{userManager.users}" var="user">
+      <h:column>
+        <f:facet name="header"> Name</f:facet>
+        #{user.name}
+      </h:column>
+      <h:column>
+        <f:facet name="header"> Email</f:facet>
+        #{user.email}
+      </h:column>
+    </h:dataTable>
+  </ui:define>
+</ui:composition>

@@ -3,13 +3,13 @@ package de.oc.bestellApp.lieferdienste;
 import javax.faces.bean.ManagedBean;
 
 @ManagedBean
-public class Lieferdienst {
+public class DeliveryService {
 
 	private int id;
 	private String name;
 	private String website;
 	
-	public Lieferdienst() {
+	public DeliveryService() {
 		
 	}
 
