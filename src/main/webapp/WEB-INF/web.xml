@@ -23,6 +23,13 @@
     <param-name>BootsFaces_USETHEME</param-name>
     <param-value>default</param-value>
   </context-param>
+  <context-param>
+    <param-name>org.omnifaces.COMBINED_RESOURCE_ACTIVATE_RESOURCE_CACHING</param-name>
+    <param-value>
+      true
+    </param-value>
+  </context-param>
+
   <welcome-file-list>
     <welcome-file>index.jsf</welcome-file>
   </welcome-file-list>

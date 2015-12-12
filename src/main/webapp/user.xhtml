@@ -7,16 +7,17 @@
   xmlns:f="http://java.sun.com/jsf/core" template="pageTemplate.xhtml">
 
   <ui:define name="content">
-    <h:dataTable styleClass="table table-striped"
-      value="#{userBean.users}" var="user">
-      <h:column>
-        <f:facet name="header"> Name</f:facet>
-        <b:inputText value="#{user.name}" />
-      </h:column>
-      <h:column>
-        <f:facet name="header"> Email</f:facet>
-        <b:inputText value="#{user.email}" />
-      </h:column>
-    </h:dataTable>
+    <h:form>
+      <b:dataTable styleClass="table table-striped" id="iduser"
+        value="#{userBean.users}" var="user"
+         style="width:100%">
+        <h:column label="Name">
+          <b:inputText value="#{user.name}" inline="true" size="30" />
+        </h:column>
+        <h:column>
+          <b:inputText value="#{user.email}" inline="true" size="100" label="email"/>
+        </h:column>
+      </b:dataTable>
+    </h:form>
   </ui:define>
 </ui:composition>

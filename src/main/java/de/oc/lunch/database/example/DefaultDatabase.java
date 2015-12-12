@@ -54,6 +54,10 @@ public class DefaultDatabase implements ServletContextListener {
 			createUser(em, "Wayne Interessierts", "wayne.interessierts@example.com");
 			createUser(em, "John Doe", "john.doe@example.com");
 			createUser(em, "Jane Dull", "jane.dull@example.com");
+			List<String> names = Names.getNames();
+			for (String name:names) {
+				createUser(em, name, name.replace(" ", ".")+"@example.com");
+			}
 			transaction.commit();
 		} catch (Exception e) {
 			transaction.rollback();

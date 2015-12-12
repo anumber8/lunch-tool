@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.TypedQuery;
+import javax.validation.constraints.Size;
 
 import de.oc.lunch.database.example.DefaultDatabase;
 
@@ -21,8 +22,10 @@ public class UserEntity implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long id; // = UUID.randomUUID().getLeastSignificantBits();
 
+	@Size(max=30)
 	private String name;
 
+	@Size(max=100)
 	private String email;
 
 	public UserEntity() {
