@@ -15,11 +15,14 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import org.apache.log4j.Logger;
+
 import de.oc.lunch.persistence.DeliveryServiceEntity;
 import de.oc.lunch.persistence.UserEntity;
 
 @WebListener
 public class DefaultDatabase implements ServletContextListener {
+	private static final Logger LOGGER = Logger.getLogger(DefaultDatabase.class);
 	public static EntityManagerFactory emf;
 
 	@Override
@@ -28,7 +31,7 @@ public class DefaultDatabase implements ServletContextListener {
 		try (Connection conn = DriverManager.getConnection("jdbc:hsqldb:lunch", "robina", "kuh")) {
 			Statement st = conn.createStatement();
 			st.execute("SHUTDOWN");
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -40,16 +43,6 @@ public class DefaultDatabase implements ServletContextListener {
 		populateUserTable();
 		readUserTable();
 		populateDeliveryServiceTable();
-	}
-
-	public synchronized void update(Connection conn, String expression) throws SQLException {
-		try (Statement st = conn.createStatement()) {
-			int i = st.executeUpdate(expression); // run the query
-
-			if (i == -1) {
-				System.out.println("db error : " + expression);
-			}
-		}
 	}
 
 	public void populateUserTable() {
@@ -67,23 +60,28 @@ public class DefaultDatabase implements ServletContextListener {
 		}
 		em.close();
 	}
-	
+
 	public void populateDeliveryServiceTable() {
 		DeliveryServiceEntity service = new DeliveryServiceEntity("Lieferheld", "www.lieferheld.de");
 		service.persist();
-		List<DeliveryServiceEntity> services = DeliveryServiceEntity.findAll();
-		System.out.println(services.size());
+		service = new DeliveryServiceEntity("BeyondJava", "www.beyondjava.net");
+		service.persist();
+		if (false) {
+			List<DeliveryServiceEntity> services = DeliveryServiceEntity.findAll();
+			LOGGER.info(services.size());
+		}
 	}
 
-	
 	public void readUserTable() {
 		EntityManager em = emf.createEntityManager();
 		TypedQuery<UserEntity> query = em.createQuery("from UserEntity", UserEntity.class);
 		List<UserEntity> resultList = query.getResultList();
-		resultList.stream().forEach(user -> System.out.println(user.getId() + " " + user.getName() + " " + user.getEmail()));
-		System.out.println("---");
-		UserEntity.findAll().stream().forEach(user -> System.out.println(user.getId() + " " + user.getName() + " " + user.getEmail()));
-		System.out.println("---");
+		if (false) {
+			resultList.stream()
+					.forEach(user -> LOGGER.info(user.getId() + " " + user.getName() + " " + user.getEmail()));
+			UserEntity.findAll().stream()
+					.forEach(user -> LOGGER.info(user.getId() + " " + user.getName() + " " + user.getEmail()));
+		}
 	}
 
 	private void createUser(EntityManager em, String name, String email) {
