@@ -11,20 +11,25 @@ import de.oc.lunch.persistence.UserEntity;
 
 @ViewScoped
 @ManagedBean
-public class UserBean implements Serializable{
+public class UserBean implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private UserEntity filter = new UserEntity();
 	private List<UserEntity> users;
 
 	@PostConstruct
 	public void init() {
-		setUsers(new UserEntity().findAll());
+		filter();
 	}
 
 	public List<UserEntity> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<UserEntity> users) {
-		this.users = users;
+	public UserEntity getFilter() {
+		return filter;
+	}
+	
+	public void filter() {
+		users = new UserEntity().findBy();
 	}
 }

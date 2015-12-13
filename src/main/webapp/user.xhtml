@@ -8,6 +8,12 @@
 
   <ui:define name="content">
     <h:form>
+    <b:row>
+    <b:column span="6">
+    <b:inputText value="#{userBean.filter.name}" label="Filter (name) " inline="true" renderLabel="true"/>
+    </b:column>
+    <b:commandButton value="Filter" onclick="ajax:userBean.filter()" update="@form" />
+    </b:row>
       <b:dataTable styleClass="table table-striped" id="iduser"
         value="#{userBean.users}" var="user"
          style="width:100%">
