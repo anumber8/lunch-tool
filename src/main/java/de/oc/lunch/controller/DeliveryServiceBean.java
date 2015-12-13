@@ -19,7 +19,7 @@ public class DeliveryServiceBean implements Serializable{
 
 	@PostConstruct
 	public void init() {
-		deliveryServices = DeliveryServiceEntity.findAll();
+		deliveryServices = new DeliveryServiceEntity().findAll();
 	}
 
 	public List<DeliveryServiceEntity> getDeliveryServices() {

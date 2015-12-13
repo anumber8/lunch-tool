@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 import de.oc.lunch.database.example.DefaultDatabase;
 
 @Entity
-public class DeliveryServiceEntity implements Serializable {
+public class DeliveryServiceEntity implements Serializable, PersistentObject<DeliveryServiceEntity> {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -58,26 +58,5 @@ public class DeliveryServiceEntity implements Serializable {
 
 	public void setWebsite(String website) {
 		this.website = website;
-	}
-	
-	public static List<DeliveryServiceEntity> findAll() {
-		EntityManager em = DefaultDatabase.emf.createEntityManager();
-		TypedQuery<DeliveryServiceEntity> query = em.createQuery("from DeliveryServiceEntity", DeliveryServiceEntity.class);
-		List<DeliveryServiceEntity> resultList = query.getResultList();
-		em.close();
-		return resultList;
-	}
-	
-	public void persist() {
-		EntityManager em = DefaultDatabase.emf.createEntityManager();
-		EntityTransaction transaction = em.getTransaction();
-		try {
-			transaction.begin();
-			em.persist(this);
-			transaction.commit();
-		} catch (Exception e) {
-			transaction.rollback();
-		}
-
 	}
 }

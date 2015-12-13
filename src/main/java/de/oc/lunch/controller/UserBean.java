@@ -17,7 +17,7 @@ public class UserBean implements Serializable{
 
 	@PostConstruct
 	public void init() {
-		setUsers(UserEntity.findAll());
+		setUsers(new UserEntity().findAll());
 	}
 
 	public List<UserEntity> getUsers() {

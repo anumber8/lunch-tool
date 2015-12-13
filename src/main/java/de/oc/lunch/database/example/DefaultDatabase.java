@@ -71,7 +71,7 @@ public class DefaultDatabase implements ServletContextListener {
 		service = new DeliveryServiceEntity("BeyondJava", "www.beyondjava.net");
 		service.persist();
 		if (false) {
-			List<DeliveryServiceEntity> services = DeliveryServiceEntity.findAll();
+			List<DeliveryServiceEntity> services = new DeliveryServiceEntity().findAll();
 			LOGGER.info(services.size());
 		}
 	}
@@ -83,7 +83,7 @@ public class DefaultDatabase implements ServletContextListener {
 		if (false) {
 			resultList.stream()
 					.forEach(user -> LOGGER.info(user.getId() + " " + user.getName() + " " + user.getEmail()));
-			UserEntity.findAll().stream()
+			new UserEntity().findAll().stream()
 					.forEach(user -> LOGGER.info(user.getId() + " " + user.getName() + " " + user.getEmail()));
 		}
 	}
