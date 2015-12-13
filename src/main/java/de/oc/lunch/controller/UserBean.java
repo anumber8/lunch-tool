@@ -30,6 +30,6 @@ public class UserBean implements Serializable {
 	}
 	
 	public void filter() {
-		users = new UserEntity().findBy();
+		users = filter.findBy();
 	}
 }
