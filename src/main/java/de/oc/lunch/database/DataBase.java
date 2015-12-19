@@ -2,42 +2,50 @@ package de.oc.lunch.database;
 
 import java.io.Serializable;
 
+import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Transient;
 
+@SessionScoped
 @Named
 public class DataBase implements Serializable {
 	private static final long serialVersionUID = 1L;
-	@Inject
-	private EntityManagerFactory emf = null;
+
+	private static EntityManagerFactory emf = null;
 
 	@Transient
 	private EntityManager entityManager = null;
 
-	@Produces @LunchDBFactory
 	public EntityManagerFactory createEntityManagerFactory() {
-		if (null == emf) {
-			emf = Persistence.createEntityManagerFactory("lunch");
+		if (null == getEmf()) {
+			setEmf(Persistence.createEntityManagerFactory("lunch"));
 		}
-		return emf;
+		return getEmf();
 	}
 
 	@Produces @LunchDB
 	public EntityManager createEntityManager() {
-		if (null == emf) {
-			emf = Persistence.createEntityManagerFactory("lunch");
+		if (null == getEmf()) {
+			setEmf(Persistence.createEntityManagerFactory("lunch"));
 		}
 		if (null == entityManager) {
-			entityManager = emf.createEntityManager();
+			entityManager = getEmf().createEntityManager();
 		} else if (!entityManager.isOpen()) {
-			entityManager = emf.createEntityManager();
+			entityManager = getEmf().createEntityManager();
 		}
 		return entityManager;
+	}
+
+	public static EntityManagerFactory getEmf() {
+		return emf;
+	}
+
+	public static void setEmf(EntityManagerFactory emf) {
+		DataBase.emf = emf;
 	}
 
 }

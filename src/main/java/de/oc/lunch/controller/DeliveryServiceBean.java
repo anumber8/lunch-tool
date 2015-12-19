@@ -4,22 +4,29 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
-import javax.faces.bean.ViewScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.persistence.EntityManager;
 
+import de.oc.lunch.database.LunchDB;
 import de.oc.lunch.persistence.DeliveryServiceEntity;
 
-@RequestScoped
+@SessionScoped
 //@ViewScoped
-@ManagedBean
+@Named
 public class DeliveryServiceBean implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private List<DeliveryServiceEntity> deliveryServices;
 
+	@Inject @LunchDB
+	private EntityManager entityManager = null;
+	
+	private DeliveryServiceEntity filter = new DeliveryServiceEntity();
+
 	@PostConstruct
 	public void init() {
-		deliveryServices = new DeliveryServiceEntity().findAll();
+		deliveryServices = new DeliveryServiceEntity().findAll(entityManager);
 	}
 
 	public List<DeliveryServiceEntity> getDeliveryServices() {
@@ -29,6 +36,27 @@ public class DeliveryServiceBean implements Serializable{
 	public void setDeliveryServices(List<DeliveryServiceEntity> deliveryServices) {
 		this.deliveryServices = deliveryServices;
 	}
+	
+	public void filter() {
+		deliveryServices = getFilter().findBy(getEntityManager());
+	}
+
+	public DeliveryServiceEntity getFilter() {
+		return filter;
+	}
+
+	public void setFilter(DeliveryServiceEntity filter) {
+		this.filter = filter;
+	}
+
+	public EntityManager getEntityManager() {
+		return entityManager;
+	}
+
+	public void setEntityManager(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
+
 
 
 }

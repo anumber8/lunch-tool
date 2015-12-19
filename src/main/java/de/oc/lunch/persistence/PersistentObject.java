@@ -2,7 +2,6 @@ package de.oc.lunch.persistence;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,15 +10,16 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 
+import de.oc.lunch.database.DataBase;
 import de.oc.lunch.database.example.DefaultDatabase;
 
 public interface PersistentObject<T> {
-	public default void persist() {
-		EntityManager em = DefaultDatabase.emf.createEntityManager();
-		EntityTransaction transaction = em.getTransaction();
+	
+	public default void persist(EntityManager entityManager) {
+		EntityTransaction transaction = entityManager.getTransaction();
 		try {
 			transaction.begin();
-			em.persist(this);
+			entityManager.persist(this);
 			transaction.commit();
 		} catch (Exception e) {
 			transaction.rollback();
@@ -27,17 +27,16 @@ public interface PersistentObject<T> {
 
 	}
 
-	public default List<T> findAll() {
-		EntityManager em = DefaultDatabase.emf.createEntityManager();
+	public default List<T> findAll(EntityManager entityManager) {
 		String entityName = this.getClass().getSimpleName();
-		TypedQuery<T> query = (TypedQuery<T>) em.createQuery("from " + entityName, getClass());
+		TypedQuery<T> query = (TypedQuery<T>) entityManager.createQuery("from " + entityName, getClass());
 		List<T> resultList = query.getResultList();
-		em.close();
+		entityManager.close();
 		return resultList;
 	}
 
-	public default List<T> findBy() {
-		EntityManager em = DefaultDatabase.emf.createEntityManager();
+	public default List<T> findBy(EntityManager entityManager) {
+//		EntityManager em = DefaultDatabase.emf.createEntityManager();
 		String entityName = this.getClass().getSimpleName();
 		Map<String, Method> fields = findFields();
 		String queryString = "from " + entityName;
@@ -50,7 +49,7 @@ public interface PersistentObject<T> {
 						firstParameter=false;
 						queryString += " where";
 					}
-					queryString += " " + s + " = :" + s;
+					queryString += " " + s + " like :" + s;
 				}
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 				// TODO Auto-generated catch block
@@ -58,7 +57,7 @@ public interface PersistentObject<T> {
 			}
 		}
 
-		TypedQuery<T> query = (TypedQuery<T>) em.createQuery(queryString, getClass());
+		TypedQuery<T> query = (TypedQuery<T>) entityManager.createQuery(queryString, getClass());
 
 		for (String s : fields.keySet()) {
 			try {
@@ -73,7 +72,6 @@ public interface PersistentObject<T> {
 		}
 
 		List<T> resultList = query.getResultList();
-		em.close();
 		return resultList;
 	}
 

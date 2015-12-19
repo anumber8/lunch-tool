@@ -17,17 +17,17 @@ import javax.servlet.annotation.WebListener;
 
 import org.apache.log4j.Logger;
 
+import de.oc.lunch.database.DataBase;
 import de.oc.lunch.persistence.DeliveryServiceEntity;
 import de.oc.lunch.persistence.UserEntity;
 
 @WebListener
 public class DefaultDatabase implements ServletContextListener {
 	private static final Logger LOGGER = Logger.getLogger(DefaultDatabase.class);
-	public static EntityManagerFactory emf;
 
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
-		emf.close();
+		DataBase.getEmf().close();
 		try (Connection conn = DriverManager.getConnection("jdbc:hsqldb:lunch", "robina", "kuh")) {
 			Statement st = conn.createStatement();
 			st.execute("SHUTDOWN");
@@ -39,59 +39,59 @@ public class DefaultDatabase implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
-		emf = Persistence.createEntityManagerFactory("lunch");
-		populateUserTable();
-		readUserTable();
-		populateDeliveryServiceTable();
+		EntityManager entityManager = new DataBase().createEntityManager();
+		populateUserTable(entityManager);
+		readUserTable(entityManager);
+		populateDeliveryServiceTable(entityManager);
+		entityManager.close();
 	}
 
-	public void populateUserTable() {
-		EntityManager em = emf.createEntityManager();
-		EntityTransaction transaction = em.getTransaction();
+	public void populateUserTable(EntityManager entityManager) {
+		
+		EntityTransaction transaction = entityManager.getTransaction();
 		try {
 			transaction.begin();
-			createUser(em, "Robina Kuh", "robina.kuh@example.com");
-			createUser(em, "Wayne Interessierts", "wayne.interessierts@example.com");
-			createUser(em, "John Doe", "john.doe@example.com");
-			createUser(em, "Jane Dull", "jane.dull@example.com");
+			createUser(entityManager, "Robina Kuh", "robina.kuh@example.com");
+			createUser(entityManager, "Wayne Interessierts", "wayne.interessierts@example.com");
+			createUser(entityManager, "John Doe", "john.doe@example.com");
+			createUser(entityManager, "Jane Dull", "jane.dull@example.com");
 			List<String> names = Names.getNames();
 			for (String name:names) {
-				createUser(em, name, name.replace(" ", ".")+"@example.com");
+				createUser(entityManager, name, name.replace(" ", ".")+"@example.com");
 			}
 			transaction.commit();
 		} catch (Exception e) {
 			transaction.rollback();
 		}
-		em.close();
+		
 	}
 
-	public void populateDeliveryServiceTable() {
+	public void populateDeliveryServiceTable(EntityManager entityManager) {
 		DeliveryServiceEntity service = new DeliveryServiceEntity("Lieferheld", "www.lieferheld.de");
-		service.persist();
+		service.persist(entityManager);
 		service = new DeliveryServiceEntity("BeyondJava", "www.beyondjava.net");
-		service.persist();
+		service.persist(entityManager);
 		if (false) {
-			List<DeliveryServiceEntity> services = new DeliveryServiceEntity().findAll();
+			List<DeliveryServiceEntity> services = new DeliveryServiceEntity().findAll(entityManager);
 			LOGGER.info(services.size());
 		}
 	}
 
-	public void readUserTable() {
-		EntityManager em = emf.createEntityManager();
-		TypedQuery<UserEntity> query = em.createQuery("from UserEntity", UserEntity.class);
+	public void readUserTable(EntityManager entityManager) {
+		TypedQuery<UserEntity> query = entityManager.createQuery("from UserEntity", UserEntity.class);
 		List<UserEntity> resultList = query.getResultList();
 		if (false) {
 			resultList.stream()
 					.forEach(user -> LOGGER.info(user.getId() + " " + user.getName() + " " + user.getEmail()));
-			new UserEntity().findAll().stream()
+			new UserEntity().findAll(entityManager).stream()
 					.forEach(user -> LOGGER.info(user.getId() + " " + user.getName() + " " + user.getEmail()));
 		}
 	}
 
-	private void createUser(EntityManager em, String name, String email) {
+	private void createUser(EntityManager entityManager, String name, String email) {
 		UserEntity jane = new UserEntity();
 		jane.setName(name);
 		jane.setEmail(email);
-		em.persist(jane);
+		entityManager.persist(jane);
 	}
 }
